@@ -1,5 +1,7 @@
 #define __MODULE_NAME__ "MEASUREMENTS"
 
+#include <stdio.h>
+#include <string.h>
 #include "measurement.h"
 
 void Measurement::copy(Measurement *m) {
@@ -10,7 +12,7 @@ void Measurement::copy(Measurement *m) {
         this->tare = m->tare;
         this->update = m->update;
     } else {
-        logger.show("invalid M");
+        logger->debug("invalid M");
     }
 }
 
@@ -18,7 +20,8 @@ Measurement::Measurement(Measurement *m) {
     this->copy(m);
 }
 
-Measurement::Measurement() {
+Measurement::Measurement(Logger *logger) {
+    this->logger = logger;
     this->reset();
 }
 
@@ -49,17 +52,17 @@ boolean Measurement::isFlagged() {
  * was wrong on processing
  * 
  */
-Measurement* Measurement::parse(char *buffer, Measurement *obj) {
+Measurement* Measurement::parse(char *buffer, Measurement *obj, Logger *logger) {
     // parse data on a new measurement 
     Measurement* m = NULL; 
 
     if (strlen(buffer) < 36) {
         // wrong size of buffer
-        logger.show("size of buffer is %d", strlen(buffer));    
-        logger.error("size of buffer %d ... expected 36 or 37", strlen(buffer));
+        logger->debug("size of buffer is %d", strlen(buffer));    
+        logger->error("size of buffer %d ... expected 36 or 37", strlen(buffer));
         m = NULL;
     } else {
-        logger.show("reformatting dataframe to parse");
+        logger->debug("reformatting dataframe to parse");
         for (byte i=0; i < strlen(buffer); i++) {
             if (buffer[i] == ',')
                 buffer[i] = '.';
@@ -68,11 +71,11 @@ Measurement* Measurement::parse(char *buffer, Measurement *obj) {
 
         if (obj)  {
             m = obj; // reuse previously created object // to avoid memory fragmentation
-            logger.show("reuse previously created object");
+            logger->debug("reuse previously created object");
             m->reset();
         } else {
-            m = new Measurement();
-            logger.show("create new object");
+            m = new Measurement(logger);
+            logger->debug("create new object");
         }
 
         // just an adjustement to read partial information from the device when just one character is missing
@@ -87,7 +90,7 @@ Measurement* Measurement::parse(char *buffer, Measurement *obj) {
         else
             sscanf(buffer, PROTOCOL_FORMAT, &(m->weight_raw), &(m->weight_net), &(m->tare));
 
-        logger.show("parsed");
+        logger->debug("parsed");
     }
 
     return m;
@@ -98,7 +101,7 @@ void Measurement::dump() {
     snprintf(aux, 255, "W-RAW:%.2f W-NET:%.2f TARE:%.2f UPDATE:%d", 
         this->weight_raw, this->weight_net, this->tare, this->update);
     aux[254] = '\0';
-    Serial.println(aux);
+    logger->debug(aux);
 }
 
 //TODO: Refactor payload to a LORA friendly format

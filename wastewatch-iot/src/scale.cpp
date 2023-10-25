@@ -3,16 +3,16 @@
 #include "scale.h"
 #include <cmath>
 
-Scale::Scale()
+Scale::Scale(Logger *logger)
 {
-    // TODO: add logger  (use flag to enable)
-    logger.show("initializing scale internal structure");
+    this->logger = logger;
+    logger->debug("initializing scale internal structure");
     for (int i = 0; i < MEASUREMENT_BUFFER_SIZE; i++)
     {
         this->measurements[i] = new Measurement();
         if (!this->measurements[i])
         {
-            logger.show("invalid measurement created");
+            logger->debug("invalid measurement created");
         }
     }
     this->index = 0; // no data
@@ -22,7 +22,7 @@ Scale::Scale()
 }
 
 // default pins D7 = RX, D8 = TX
-Scale::Scale(int _rx, int _tx) : Scale()
+Scale::Scale(int _rx, int _tx, Logger *logger) : Scale(logger)
 {
 
     this->serial_conn = new SoftwareSerial(_rx, _tx);
@@ -52,18 +52,16 @@ Scale::~Scale()
 
 int Scale::getSampleBefore(Measurement *m, unsigned long seconds)
 {
-#ifdef DEBUG
-    logger.show("BEGIN: getSamplesBefore");
-#endif
+
+    logger->debug("BEGIN: getSamplesBefore");
 
     int ix = this->index;
     int cnt = 0;
     while ((cnt < this->samples) && ((m->ts - this->measurements[ix]->ts) < seconds * 1000L))
     {
 
-#ifdef DEBUG
-        logger.show("getSamplesBefore: %ld | %d | %d < %d", seconds, ix, cnt, this->samples);
-#endif
+
+        logger->debug("getSamplesBefore: %ld | %d | %d < %d", seconds, ix, cnt, this->samples);
         cnt++;
         if (cnt < this->samples)
         {
@@ -74,16 +72,14 @@ int Scale::getSampleBefore(Measurement *m, unsigned long seconds)
             }
         }
         // yield();
-#ifdef DEBUG
-        logger.show("getSamplesBefore: ix=%d | m=%s | m[ix]=%s | m->ts=%lu | m[ix]->ts=%lu ",
+
+        logger->debug("getSamplesBefore: ix=%d | m=%s | m[ix]=%s | m->ts=%lu | m[ix]->ts=%lu ",
             ix, (m ? "TRUE" : "FALSE"), (this->measurements[ix] ? "TRUE" : "FALSE"),
             (m ? m->ts : 0l),
             (this->measurements[ix] ? this->measurements[ix]->ts : 0l));
-#endif
     }
-#ifdef DEBUG
-    logger.show("END: getSamplesBefore ( %d )", ix);
-#endif
+
+    logger->debug("END: getSamplesBefore ( %d )", ix);
     // got the oldest sample to compare to
     return ix;
 }
@@ -110,8 +106,8 @@ void Scale::calculateMeasures(Measurement *m)
     float mean = 0.0;
     int counter = 0;
 
-    logger.show("BEGIN:calculateMeasures");
-    logger.show("ix1 = %d - %d | ix = %d | samples = %d | index = %.d", ix1, ix2, ix, this->samples, this->index);
+    logger->debug("BEGIN:calculateMeasures");
+    logger->debug("ix1 = %d - %d | ix = %d | samples = %d | index = %.d", ix1, ix2, ix, this->samples, this->index);
 
     // theres at least 2 samples / measures
     if (this->samples > 2)
@@ -137,12 +133,12 @@ void Scale::calculateMeasures(Measurement *m)
         // condition to update (current weight is less than median weight)
         if (m->weight() < (mean * .9) && m->weight() > (mean * 1.1))
         {
-            logger.show("Valid weight!");
+            logger->debug("Valid weight!");
             m->update = 1;
         }
 
     }
-    logger.show("END:calculateMeasures");
+    logger->debug("END:calculateMeasures");
 }
 
 /**
@@ -156,7 +152,7 @@ int Scale::add(Measurement *m)
     if (!m || (m && m->weight_raw == -1 && m->weight_net == -1 && m->tare == -1))
     {
         // invalid entry
-        logger.show("invalid entry ... discarding");
+        logger->debug("invalid entry ... discarding");
         if (m)
         {
             m->dump();
@@ -173,28 +169,28 @@ int Scale::add(Measurement *m)
             char payload[300];
             m->payload(payload, 300);
 
-            logger.show("payload to send = %s", payload);
+            logger->debug("payload to send = %s", payload);
             if (this->_device)
             {
                 // TODO: send data (USING LORA)
-                logger.show("Send data");
+                logger->debug("Send data");
                 
             }
             else
             {
-                logger.show("missing device !!!");
+                logger->debug("missing device !!!");
             }
         }
 
-        logger.show("returning from calculate measures");
+        logger->debug("returning from calculate measures");
 
         if (m)
         {
-            logger.show("T:%.2f N:%.2f TARE:%.2f -- CALC WEIGHT:%.2f", m->weight_raw, m->weight_net, m->tare, m->weight());
+            logger->debug("T:%.2f N:%.2f TARE:%.2f -- CALC WEIGHT:%.2f", m->weight_raw, m->weight_net, m->tare, m->weight());
         }
         else
         {
-            logger.show("m is NULL");
+            logger->debug("m is NULL");
         }
 
         this->index = this->getNext(this->index);
@@ -211,7 +207,7 @@ bool Scale::shouldReboot()
 {
     if (_restartCounter > 180)
     {
-        logger.show("REBOOT!");
+        logger->debug("REBOOT!");
         return true;
     }
 
@@ -236,7 +232,7 @@ bool Scale::shouldUpload(Measurement *m)
 void Scale::setDevice(Device *device)
 {
     _device = device;
-    logger.show("Set device!");
+    logger->debug("Set device!");
 }
 
 Measurement *Scale::getCurrent()
@@ -256,13 +252,13 @@ int Scale::process(char *buffer)
     Measurement *m = this->measurements[this->index];
     if (m)
     {
-        logger.show("parsing ...");
+        logger->debug("parsing ...");
         m->parse(buffer, m);
         return this->add(m);
     }
     else
     {
-        logger.show("invalid read from the device = %s", buffer);
+        logger->debug("invalid read from the device = %s", buffer);
     }
 
     return 0;
@@ -335,19 +331,18 @@ int Scale::read()
         }
         _buffer[i] = '\0';
 
-#ifdef DEBUG
+
         this->dump(_buffer, i);
-#endif
         ret = this->process(_buffer);
 
-        logger.show("[ %d ]", i);
+        logger->debug("[ %d ]", i);
         _lastReadFromDevice = ts;
     }
     else
     {
         if (!this->state)
         {
-            logger.show("need to initialize the serial first");
+            logger->debug("need to initialize the serial first");
         }
     }
 

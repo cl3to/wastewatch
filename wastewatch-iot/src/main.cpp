@@ -17,6 +17,7 @@
 // #define DEBUG
 
 #include "scale.h"
+#include "logging.h"
 
 #define __APP_VERSION__ "0.0.1"
 
@@ -25,21 +26,17 @@
 // Scale scale(D6,D7); // scale 1
 Scale scale(D6, D7); // scale 2
 
-// Define serial port to read ESP logs
-#define SERIAL_BAUD 115200
+Logger *logger;
 
 /**
  * initialize the program, creating a new logical device, and linking it to the physical device
  */
 void setup()
 {
+    logger = new Logger();
+    logger->debug("initializing");
 
-    Serial.begin(SERIAL_BAUD);
     // TODO: Add app status
-
-    Serial.begin(SERIAL_BAUD);
-    Serial.println("initializing");
-
     // TODO: Start application
     // TODO: LoraWAN setup
 }
@@ -60,14 +57,13 @@ void loop()
     }
     else
     {
-        Serial.println("setting up scale...");
+        logger->debug("setting up scale...");
         scale.begin();
-        Serial.println("scale started");
+        logger->debug("scale started");
     }
 
     if (scale.shouldReboot())
     {
-        Serial.println(">>>>>>>>>>> restarting after too much time idle ... ");
-        ESP.restart();
+        logger->debug(">>>>>>>>>>> restarting after too much time idle ... ");
     }
 }
