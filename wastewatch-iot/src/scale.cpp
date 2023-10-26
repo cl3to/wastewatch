@@ -1,7 +1,8 @@
 #define __MODULE_NAME__ "SCALE"
 
-#include "scale.h"
+#include <stdio.h>
 #include <cmath>
+#include "scale.h"
 
 Scale::Scale(Logger *logger)
 {
@@ -267,26 +268,39 @@ int Scale::process(char *buffer)
 /**
  * shows the content of read buffer in ASC and HEX
  */
-// TODO: Refactor this using logger
 void Scale::dump(char *buffer, int size)
 {
-    // dump output
-    Serial.print(buffer);
+    // TODO: Check if this buffer can be smaller
+    char pretty[100];
+
+    // dump ascii
+    logger->debug("ascii: %s", buffer);
+
     // calculate space to col 80
-    for (int i = size; i <= 45; i++)
+    int i;
+    for ( i = size; i <= 45; i++)
     {
-        Serial.print(" ");
+       pretty[i] = ' ';
     }
-    Serial.print(" | ");
+    pretty[i++] = ' ';
+    pretty[i++] = '|';
+    pretty[i++] = ' ';
+    pretty[i++] = '\0';
+
     // dump hex code
-    for (int i = 0; i < size; i++)
+    char *hexbuff_ptr = pretty;
+    for (i = 0; i < size; i++)
     {
-        byte b = buffer[i];
-        Serial.print(b < 0x10 ? " 0" : " ");
-        Serial.print(b, HEX);
+        unsigned char b = buffer[i];
+        if (b < 0x10)
+            hexbuff_ptr += sprintf(hexbuff_ptr, "%s", " 0");
+        else
+            hexbuff_ptr += sprintf(hexbuff_ptr, "%s", " ");
+
+        hexbuff_ptr += sprintf(hexbuff_ptr, "0x%02X", b);
     }
-    Serial.println("");
-    // yield();
+
+    logger->debug("hex: %s", pretty);
 }
 
 /**
