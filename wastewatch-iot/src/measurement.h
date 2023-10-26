@@ -6,6 +6,7 @@
 #define PROTOCOL_FORMAT "PB:%fkg PL:%fkg T:%fkg\r\n"
 #define PROTOCOL_FORMAT2 "B:%fkg PL:%fkg T:%fkg\r\n"
 
+#include "logging.h"
 #include "Arduino.h"
 
 /**
@@ -14,6 +15,7 @@
  * holds information about each read taken from the scale 
  */
 class Measurement  {
+    Logger *logger;
     public:
         unsigned long ts;
         float weight_raw;
@@ -22,7 +24,7 @@ class Measurement  {
 
         byte update;
 
-        Measurement();
+        Measurement(Logger *logger);
         Measurement(Measurement*);
         ~Measurement();
 

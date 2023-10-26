@@ -1,6 +1,7 @@
 #ifndef SCALE_H
 #define SCALE_H
 
+#include "logging.h"
 #include "measurement.h"
 #include <SoftwareSerial.h>
 
@@ -24,11 +25,12 @@
  * to save some buffered information of the previous reads 
  */
 class Scale {
+    Logger *logger;
     public: 
         Measurement* measurements[MEASUREMENT_BUFFER_SIZE];
         
-        Scale();
-        Scale(int _rx, int _tx);
+        Scale(Logger *logger);
+        Scale(int _rx, int _tx, Logger *logger);
         ~Scale();
 
         int add(Measurement* m);
