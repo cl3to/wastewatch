@@ -4,6 +4,7 @@
 #include "logging.h"
 #include "measurement.h"
 #include <SoftwareSerial.h>
+#include "services/sender.h"
 
 #define NUMBER_SECONDS_PER_PLATE 2
 #define DATA_BUFFER_SIZE 255
@@ -29,8 +30,8 @@ class Scale {
     public: 
         Measurement* measurements[MEASUREMENT_BUFFER_SIZE];
         
-        Scale(Logger *logger);
-        Scale(int _rx, int _tx, Logger *logger);
+        Scale();
+        Scale(int _rx, int _tx);
         ~Scale();
 
         int add(Measurement* m);
@@ -41,6 +42,7 @@ class Scale {
         void dump(char* buffer, int size);
         bool shouldReboot();
         int getState();
+        void setLogger(Logger* logger);
 
     private:
 

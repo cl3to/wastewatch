@@ -30,6 +30,8 @@
 Scale scale(A4, A5); // scale 2
 
 Logger *logger;
+TestDataSender *testStrategy;
+DataSender *sender;
 
 /**
  * initialize the program, creating a new logical device, and linking it to the physical device
@@ -39,6 +41,11 @@ void setup()
     logger = new Logger();
     logger->debug("initializing");
 
+    testStrategy = new TestDataSender(logger);
+    sender = new DataSender(testStrategy);
+
+    scale.setDevice(sender);
+    scale.setLogger(logger);
     // TODO: Add app status
     // TODO: Start application
     // TODO: LoraWAN setup
@@ -55,19 +62,19 @@ void loop()
 {
     logger->debug("looping");
     delay(1000);
-    // if (scale.getState())
-    // {
-    //     scale.read();
-    // }
-    // else
-    // {
-    //     logger->debug("setting up scale...");
-    //     scale.begin();
-    //     logger->debug("scale started");
-    // }
+    if (scale.getState())
+    {
+        scale.read();
+    }
+    else
+    {
+        logger->debug("setting up scale...");
+        scale.begin();
+        logger->debug("scale started");
+    }
 
-    // if (scale.shouldReboot())
-    // {
-    //     logger->debug(">>>>>>>>>>> restarting after too much time idle ... ");
-    // }
+    if (scale.shouldReboot())
+    {
+        logger->debug(">>>>>>>>>>> restarting after too much time idle ... ");
+    }
 }
