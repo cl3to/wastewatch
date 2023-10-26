@@ -10,7 +10,7 @@ Scale::Scale(Logger *logger)
     logger->debug("initializing scale internal structure");
     for (int i = 0; i < MEASUREMENT_BUFFER_SIZE; i++)
     {
-        this->measurements[i] = new Measurement();
+        this->measurements[i] = new Measurement(logger);
         if (!this->measurements[i])
         {
             logger->debug("invalid measurement created");
@@ -230,7 +230,7 @@ bool Scale::shouldUpload(Measurement *m)
     return ret;
 }
 
-void Scale::setDevice(Device *device)
+void Scale::setDevice(DataSender *device)
 {
     _device = device;
     logger->debug("Set device!");
@@ -254,7 +254,7 @@ int Scale::process(char *buffer)
     if (m)
     {
         logger->debug("parsing ...");
-        m->parse(buffer, m);
+        m->parse(buffer, m, logger);
         return this->add(m);
     }
     else

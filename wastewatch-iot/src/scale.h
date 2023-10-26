@@ -35,11 +35,12 @@ class Scale {
 
         int add(Measurement* m);
         Measurement* getCurrent();
-        void setDevice(Device* device);
+        void setDevice(DataSender* device);
         void begin();
         int read();
         void dump(char* buffer, int size);
         bool shouldReboot();
+        int getState();
 
     private:
 
@@ -50,7 +51,7 @@ class Scale {
         int samples = 0;
         int _restartCounter = 0;
         // TODO: add restaurant flag
-        Device* _device = NULL;
+        DataSender* _device = NULL;
 
         SoftwareSerial* serial_conn = NULL; // (D7,D8,true,256); // RX, TX, inverse, buffersize 
         unsigned long _lastUpdate; // last ts when the data was sent to the platform

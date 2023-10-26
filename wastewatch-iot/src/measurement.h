@@ -30,7 +30,7 @@ class Measurement  {
 
         void copy(Measurement*);
 
-        static Measurement* parse(char *buffer, Measurement *obj = NULL); 
+        static Measurement* parse(char *buffer, Measurement *obj, Logger *logger); 
 
         void dump();
         boolean isFlagged();
