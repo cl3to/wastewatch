@@ -11,7 +11,7 @@ class TestDataSender : public DataSenderStrategy
 Logger *logger;
 public:
     TestDataSender(Logger *logger);
-    void sendData(const std::string &data) override;
+    void sendData(char *data) override;
 };
 
 #endif

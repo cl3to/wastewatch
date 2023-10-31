@@ -6,8 +6,8 @@
 #define PROTOCOL_FORMAT "PB:%fkg PL:%fkg T:%fkg\r\n"
 #define PROTOCOL_FORMAT2 "B:%fkg PL:%fkg T:%fkg\r\n"
 
-#include "logging.h"
 #include "Arduino.h"
+#include "logging.h"
 
 /**
  * CLASS MEASUREMENT

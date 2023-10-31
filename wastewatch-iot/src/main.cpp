@@ -16,7 +16,7 @@
 
 // #define DEBUG
 
-#include <Arduino.h>
+#include "Arduino.h"
 #include "scale.h"
 #include "logging.h"
 #include "services/sender.h"
@@ -26,8 +26,8 @@
 
 // create a scale device (physical) and inform digital PINS used to create a software serial
 // communication
-// Scale scale(D6,D7); // scale 1
-Scale scale(A4, A5); // scale 2
+Scale scale(D6,D7); // scale 1 ESP32
+// Scale scale(A4, A5); // scale 2 NodeMCU
 
 Logger *logger;
 TestDataSender *testStrategy;

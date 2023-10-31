@@ -1,8 +1,8 @@
 #define __MODULE_NAME__ "SCALE"
 
 #include <stdio.h>
-#include <cmath>
 #include "scale.h"
+#include <cmath>        // Manter a ordem dos imports por conta de um bug
 
 
 Scale::Scale()
