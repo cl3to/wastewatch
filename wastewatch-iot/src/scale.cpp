@@ -1,16 +1,16 @@
 #define __MODULE_NAME__ "SCALE"
 
 #include <stdio.h>
-#include <cmath>
 #include "scale.h"
+#include <cmath>        // Manter a ordem dos imports por conta de um bug
 
-Scale::Scale(Logger *logger)
+
+Scale::Scale()
 {
-    this->logger = logger;
     logger->debug("initializing scale internal structure");
     for (int i = 0; i < MEASUREMENT_BUFFER_SIZE; i++)
     {
-        this->measurements[i] = new Measurement();
+        this->measurements[i] = new Measurement(logger);
         if (!this->measurements[i])
         {
             logger->debug("invalid measurement created");
@@ -23,7 +23,7 @@ Scale::Scale(Logger *logger)
 }
 
 // default pins D7 = RX, D8 = TX
-Scale::Scale(int _rx, int _tx, Logger *logger) : Scale(logger)
+Scale::Scale(int _rx, int _tx) : Scale()
 {
 
     this->serial_conn = new SoftwareSerial(_rx, _tx);
@@ -175,7 +175,6 @@ int Scale::add(Measurement *m)
             {
                 // TODO: send data (USING LORA)
                 logger->debug("Send data");
-                
             }
             else
             {
@@ -230,10 +229,15 @@ bool Scale::shouldUpload(Measurement *m)
     return ret;
 }
 
-void Scale::setDevice(Device *device)
+void Scale::setDevice(DataSender *device)
 {
     _device = device;
     logger->debug("Set device!");
+}
+
+void Scale::setLogger(Logger *logger)
+{
+    this->logger = logger;
 }
 
 Measurement *Scale::getCurrent()
@@ -254,7 +258,7 @@ int Scale::process(char *buffer)
     if (m)
     {
         logger->debug("parsing ...");
-        m->parse(buffer, m);
+        m->parse(buffer, m, logger);
         return this->add(m);
     }
     else

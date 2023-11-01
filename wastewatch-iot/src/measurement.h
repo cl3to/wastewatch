@@ -6,8 +6,8 @@
 #define PROTOCOL_FORMAT "PB:%fkg PL:%fkg T:%fkg\r\n"
 #define PROTOCOL_FORMAT2 "B:%fkg PL:%fkg T:%fkg\r\n"
 
-#include "logging.h"
 #include "Arduino.h"
+#include "logging.h"
 
 /**
  * CLASS MEASUREMENT
@@ -30,7 +30,7 @@ class Measurement  {
 
         void copy(Measurement*);
 
-        static Measurement* parse(char *buffer, Measurement *obj = NULL); 
+        static Measurement* parse(char *buffer, Measurement *obj, Logger *logger); 
 
         void dump();
         boolean isFlagged();

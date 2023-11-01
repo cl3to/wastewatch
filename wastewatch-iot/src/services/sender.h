@@ -13,7 +13,7 @@ private:
 public:
     DataSender(DataSenderStrategy* strategy) : dataSendingStrategy(strategy) {}
 
-    void sendData(const std::string& data) {
+    void sendData(char *data) {
         dataSendingStrategy->sendData(data);
     }
 

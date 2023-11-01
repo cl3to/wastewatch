@@ -4,6 +4,7 @@
 #include "logging.h"
 #include "measurement.h"
 #include <SoftwareSerial.h>
+#include "services/sender.h"
 
 #define NUMBER_SECONDS_PER_PLATE 2
 #define DATA_BUFFER_SIZE 255
@@ -29,17 +30,19 @@ class Scale {
     public: 
         Measurement* measurements[MEASUREMENT_BUFFER_SIZE];
         
-        Scale(Logger *logger);
-        Scale(int _rx, int _tx, Logger *logger);
+        Scale();
+        Scale(int _rx, int _tx);
         ~Scale();
 
         int add(Measurement* m);
         Measurement* getCurrent();
-        void setDevice(Device* device);
+        void setDevice(DataSender* device);
         void begin();
         int read();
         void dump(char* buffer, int size);
         bool shouldReboot();
+        int getState();
+        void setLogger(Logger* logger);
 
     private:
 
@@ -50,7 +53,7 @@ class Scale {
         int samples = 0;
         int _restartCounter = 0;
         // TODO: add restaurant flag
-        Device* _device = NULL;
+        DataSender* _device = NULL;
 
         SoftwareSerial* serial_conn = NULL; // (D7,D8,true,256); // RX, TX, inverse, buffersize 
         unsigned long _lastUpdate; // last ts when the data was sent to the platform

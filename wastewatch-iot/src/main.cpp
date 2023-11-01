@@ -16,17 +16,22 @@
 
 // #define DEBUG
 
+#include "Arduino.h"
 #include "scale.h"
 #include "logging.h"
+#include "services/sender.h"
+#include "services/test_sender.h"
 
 #define __APP_VERSION__ "0.0.1"
 
 // create a scale device (physical) and inform digital PINS used to create a software serial
 // communication
-// Scale scale(D6,D7); // scale 1
-Scale scale(D6, D7); // scale 2
+Scale scale(D6,D7); // scale 1 ESP32
+// Scale scale(A4, A5); // scale 2 NodeMCU
 
 Logger *logger;
+TestDataSender *testStrategy;
+DataSender *sender;
 
 /**
  * initialize the program, creating a new logical device, and linking it to the physical device
@@ -36,6 +41,11 @@ void setup()
     logger = new Logger();
     logger->debug("initializing");
 
+    testStrategy = new TestDataSender(logger);
+    sender = new DataSender(testStrategy);
+
+    scale.setDevice(sender);
+    scale.setLogger(logger);
     // TODO: Add app status
     // TODO: Start application
     // TODO: LoraWAN setup
@@ -50,7 +60,8 @@ void setup()
  */
 void loop()
 {
-
+    logger->debug("looping");
+    delay(1000);
     if (scale.getState())
     {
         scale.read();

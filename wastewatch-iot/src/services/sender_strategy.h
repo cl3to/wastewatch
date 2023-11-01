@@ -5,7 +5,7 @@
 
 class DataSenderStrategy {
 public:
-    virtual void sendData(const std::string& data) = 0;
+    virtual void sendData(char *data) = 0;
     virtual ~DataSenderStrategy() {}
 };
 
