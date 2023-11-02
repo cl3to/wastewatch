@@ -384,6 +384,7 @@ int Scale::readFromSerial() {
  */
 int Scale::readRandomValues() {
     float pb, pl, t;
+    unsigned long ts = millis();
 
     // generate a random seed
     srand(time(NULL));
@@ -393,6 +394,8 @@ int Scale::readRandomValues() {
     t = (float)rand() / RAND_MAX * 5;
 
     snprintf(_buffer, sizeof(_buffer), "PB:%fkg PL:%fkg T:%fkg\r\n", pb, pl, t);
+    
+    _lastReadFromDevice = ts;
     return this->process(_buffer);
 }
 
