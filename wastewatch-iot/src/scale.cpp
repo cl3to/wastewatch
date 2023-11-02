@@ -393,7 +393,7 @@ int Scale::readRandomValues() {
     pl = (float)rand() / RAND_MAX * 50;
     t = (float)rand() / RAND_MAX * 5;
 
-    snprintf(_buffer, sizeof(_buffer), "PB:%fkg PL:%fkg T:%fkg\r\n", pb, pl, t);
+    snprintf(_buffer, sizeof(_buffer), PROTOCOL_FORMAT, pb, pl, t);
     
     _lastReadFromDevice = ts;
     return this->process(_buffer);
