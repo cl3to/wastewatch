@@ -17,6 +17,8 @@
 
 #define TIMEOUT_READING_FROM_SCALE 60000 // 1 minute
 
+#define USE_MOCK 1
+
 //#define DEBUG
 
 /**
@@ -43,6 +45,8 @@ class Scale {
         bool shouldReboot();
         int getState();
         void setLogger(Logger* logger);
+        int readFromSerial();
+        int readRandomValues();
 
     private:
 

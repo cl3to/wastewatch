@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "scale.h"
 #include <cmath>        // Manter a ordem dos imports por conta de um bug
-
+#include <time.h>
 
 Scale::Scale()
 {
@@ -308,13 +308,25 @@ void Scale::dump(char *buffer, int size)
 }
 
 /**
+ * read the scale measurements
+ */
+int Scale::read()
+{
+    if (USE_MOCK) {
+        return this->readRandomValues();
+    }
+    else {
+        return this->readFromSerial();
+    }
+}
+
+/**
  * read serial line and fill the read buffer to be processed
  * looking for dataframe finish.
  * possible the first dataframe is junked and should be ignored
  * since the scale is in continous transmission mode
  */
-int Scale::read()
-{
+int Scale::readFromSerial() {
     unsigned long ts = millis();
     int ret = 0;
     if (this->state && this->serial_conn->available() > 0)
@@ -365,6 +377,26 @@ int Scale::read()
     }
 
     return ret;
+}
+
+/**
+ * read random generated values for mock purposes
+ */
+int Scale::readRandomValues() {
+    float pb, pl, t;
+    unsigned long ts = millis();
+
+    // generate a random seed
+    srand(time(NULL));
+
+    pb = (float)rand() / RAND_MAX * 55;
+    pl = (float)rand() / RAND_MAX * 50;
+    t = (float)rand() / RAND_MAX * 5;
+
+    snprintf(_buffer, sizeof(_buffer), PROTOCOL_FORMAT, pb, pl, t);
+    
+    _lastReadFromDevice = ts;
+    return this->process(_buffer);
 }
 
 void Scale::begin()
