@@ -20,17 +20,21 @@
 #include "scale.h"
 #include "logging.h"
 #include "services/sender.h"
-#include "services/test_sender.h"
+#include "services/lora_sender.h"
 
 #define __APP_VERSION__ "0.0.1"
 
 // create a scale device (physical) and inform digital PINS used to create a software serial
 // communication
-Scale scale(D6,D7); // scale 1 ESP32
-// Scale scale(A4, A5); // scale 2 NodeMCU
+#ifdef NODEMCU_DEV
+Scale scale(D6,D7); // scale 1 NodeMCU
+#endif
+#ifdef ESP32_DEV
+Scale scale(A4, A5); // scale 2 ESP32
+#endif
 
 Logger *logger;
-TestDataSender *testStrategy;
+LoraDataSender *loraStrategy;
 DataSender *sender;
 
 /**
@@ -41,8 +45,8 @@ void setup()
     logger = new Logger();
     logger->debug("initializing");
 
-    testStrategy = new TestDataSender(logger);
-    sender = new DataSender(testStrategy);
+    loraStrategy = new LoraDataSender(logger);
+    sender = new DataSender(loraStrategy);
 
     scale.setDevice(sender);
     scale.setLogger(logger);
