@@ -1,25 +1,35 @@
+#include <Arduino.h>
 #include "lora_sender.h"
-
+#include <cstring>
 
 // TODO: Ajust the correct pins for the boards
 #ifdef NODEMCU_DEV
-LoRa_E32 e32ttl(D2, D3); // e32 TX e32 RX NodeMCU
+#include <SoftwareSerial.h>
+SoftwareSerial LoraSerial(D3, D2); // SoftwareSerial Serial(ESPTX, ESPRX)
 #endif
+
 #ifdef ESP32_DEV
-LoRa_E32 e32ttl(&Serial2, 15, 21, 19); //  RX AUX M0 M1 ESP32
+#include <HardwareSerial.h>
+HardwareSerial LoraSerial(2); //Use UART2
 #endif
 
 LoraDataSender::LoraDataSender(Logger *logger) {
     this->logger = logger;
 
     // Startup all pins and UART
-    e32ttl.begin();
+    // TODO: Implement more robust initialization
+    LoraSerial.begin(9600);
 }
 
 void LoraDataSender::sendData(char* data)
 {
     // Send message
-    ResponseStatus response = e32ttl.sendMessage(data);
-    // Check the send status
-    logger->debug("MESSAGE SENDING STATUS: %s", response.getResponseDescription().c_str());
+    // TODO: Improve the implementation
+    int written_bytes = LoraSerial.write(data);
+
+    if (written_bytes == (int) strlen(data)) {
+        logger->debug("MESSAGE SENT: %s", data);
+    } else {
+        logger->debug("MESSAGE NOT SENT: %s", data);
+    }
 }

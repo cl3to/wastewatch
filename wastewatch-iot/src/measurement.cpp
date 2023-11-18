@@ -56,10 +56,10 @@ Measurement* Measurement::parse(char *buffer, Measurement *obj, Logger *logger) 
     // parse data on a new measurement 
     Measurement* m = NULL; 
 
-    if (strlen(buffer) < 36) {
+    if (strlen(buffer) < 30) {
         // wrong size of buffer
         logger->debug("size of buffer is %d", strlen(buffer));    
-        logger->error("size of buffer %d ... expected 36 or 37", strlen(buffer));
+        logger->error("size of buffer %d ... expected 31 or 32", strlen(buffer));
         m = NULL;
     } else {
         logger->debug("reformatting dataframe to parse");
@@ -85,6 +85,7 @@ Measurement* Measurement::parse(char *buffer, Measurement *obj, Logger *logger) 
         // so no multithreading is possible ...
         // possible solutions are use the more advanced ESP32 (multicore) or other more potent device
         //
+        logger->debug("buffer = %s", buffer);
         if (strlen(buffer) == 36) 
             sscanf(buffer, PROTOCOL_FORMAT2, &(m->weight_raw), &(m->weight_net), &(m->tare));
         else

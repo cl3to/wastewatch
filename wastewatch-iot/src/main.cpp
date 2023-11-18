@@ -64,8 +64,7 @@ void setup()
  */
 void loop()
 {
-    logger->debug("looping");
-    delay(1000);
+    delay(5000);
     if (scale.getState())
     {
         scale.read();

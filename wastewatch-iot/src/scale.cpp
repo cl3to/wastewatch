@@ -175,6 +175,7 @@ int Scale::add(Measurement *m)
             {
                 // TODO: send data (USING LORA)
                 logger->debug("Send data");
+                this->_device->sendData(payload);
             }
             else
             {
@@ -259,6 +260,7 @@ int Scale::process(char *buffer)
     {
         logger->debug("parsing ...");
         m->parse(buffer, m, logger);
+        m->dump();
         return this->add(m);
     }
     else
@@ -313,6 +315,7 @@ void Scale::dump(char *buffer, int size)
 int Scale::read()
 {
     if (USE_MOCK) {
+        logger->debug("Using mock data");
         return this->readRandomValues();
     }
     else {
@@ -390,11 +393,14 @@ int Scale::readRandomValues() {
     srand(time(NULL));
 
     pb = (float)rand() / RAND_MAX * 55;
-    pl = (float)rand() / RAND_MAX * 50;
-    t = (float)rand() / RAND_MAX * 5;
+    t = (float)rand() / RAND_MAX * 1;
+    pl = pb - t;
 
-    snprintf(_buffer, sizeof(_buffer), PROTOCOL_FORMAT, pb, pl, t);
+    logger->debug("pb = %f | pl = %f | t = %f", pb, pl, t);
+
+    sprintf(_buffer, PROTOCOL_FORMAT, pb, pl, t);
     
+    logger->debug("buffer = %s", _buffer);
     _lastReadFromDevice = ts;
     return this->process(_buffer);
 }
