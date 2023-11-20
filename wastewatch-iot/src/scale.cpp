@@ -30,6 +30,7 @@ Scale::Scale(int _rx, int _tx) : Scale()
     this->index = 0;
     this->rx = _rx;
     this->tx = _tx;
+    this->restaurant = 0;
 }
 
 Scale::~Scale()
@@ -167,8 +168,8 @@ int Scale::add(Measurement *m)
 
         if (this->shouldUpload(m))
         {
-            char payload[300];
-            m->payload(payload, 300);
+            char payload[58];
+            m->payload(payload, 58, this->restaurant);
 
             logger->debug("payload to send = %s", payload);
             if (this->_device)
@@ -176,6 +177,7 @@ int Scale::add(Measurement *m)
                 // TODO: send data (USING LORA)
                 logger->debug("Send data");
                 this->_device->sendData(payload);
+                _lastUpdate = millis();
             }
             else
             {
@@ -315,7 +317,6 @@ void Scale::dump(char *buffer, int size)
 int Scale::read()
 {
     if (USE_MOCK) {
-        logger->debug("Using mock data");
         return this->readRandomValues();
     }
     else {
@@ -396,19 +397,14 @@ int Scale::readRandomValues() {
     t = (float)rand() / RAND_MAX * 1;
     pl = pb - t;
 
-    logger->debug("pb = %f | pl = %f | t = %f", pb, pl, t);
-
     sprintf(_buffer, PROTOCOL_FORMAT, pb, pl, t);
     
-    logger->debug("buffer = %s", _buffer);
     _lastReadFromDevice = ts;
     return this->process(_buffer);
 }
 
 void Scale::begin()
 {
-    // this->serial_conn->begin(9600);
-    //  software serial version 5.1.0 and up will use this
     this->serial_conn->begin(9600, SWSERIAL_8N1, rx, tx, true, 256, 10);
     this->state = 1;
 }

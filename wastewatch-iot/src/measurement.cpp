@@ -85,7 +85,6 @@ Measurement* Measurement::parse(char *buffer, Measurement *obj, Logger *logger) 
         // so no multithreading is possible ...
         // possible solutions are use the more advanced ESP32 (multicore) or other more potent device
         //
-        logger->debug("buffer = %s", buffer);
         if (strlen(buffer) == 36) 
             sscanf(buffer, PROTOCOL_FORMAT2, &(m->weight_raw), &(m->weight_net), &(m->tare));
         else
@@ -106,9 +105,9 @@ void Measurement::dump() {
 }
 
 //TODO: Refactor payload to a LORA friendly format
-void Measurement::payload(char* aux, int size) {
-    snprintf(aux, size, "{\"raw\":%.2f, \"net\":%.2f, \"tare\":%.2f}",
-        this->weight_raw, this->weight_net, this->tare);
+void Measurement::payload(char* aux, int size, int restaurant) {
+    snprintf(aux, size, "{\"R\":%d, \"P\":%.2f}",
+        restaurant, this->weight_net);
     aux[size-1] = '\0';
 }
 

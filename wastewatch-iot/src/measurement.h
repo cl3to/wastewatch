@@ -35,7 +35,7 @@ class Measurement  {
         void dump();
         boolean isFlagged();
 
-        void payload(char* aux, int size);
+        void payload(char* aux, int size, int restaurant);
         float weight();
 
     protected:
