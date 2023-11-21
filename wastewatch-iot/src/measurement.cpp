@@ -105,8 +105,8 @@ void Measurement::dump() {
 }
 
 //TODO: Refactor payload to a LORA friendly format
-void Measurement::payload(char* aux, int size, int restaurant) {
-    snprintf(aux, size, "{\"R\":%d, \"P\":%.2f}",
+void Measurement::payload(char* aux, int size, char restaurant) {
+    snprintf(aux, size, "{\"R%c\", \"P\":%.2f}",
         restaurant, this->weight_net);
     aux[size-1] = '\0';
 }
