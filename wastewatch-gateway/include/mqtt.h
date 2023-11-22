@@ -15,11 +15,11 @@ class MQTTClient {
             _pwd = pwd;
         }
 
-        void setPubChannel(char* pub){
+        void setPubTopic(char* pub){
             _pub = pub;
         }
 
-        void setSubChannel(char* sub){
+        void setSubTopic(char* sub){
             _sub = sub;
         }
 

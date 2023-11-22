@@ -3,13 +3,8 @@
 #include "lora.h"
 #include "mqtt.h"
 #include "utils.h"
+#include "secrets.h"
 
-#ifndef SSID_NAME
-#define SSID_NAME "WasteWatch"
-#endif
-#ifndef SSID_PASSWORD
-#define SSID_PASSWORD "wastewatch"
-#endif
 
 #define DEBUG_BAUD_RATE 115200
 
@@ -24,6 +19,8 @@ void setup() {
   Serial.begin(DEBUG_BAUD_RATE);
   lora.begin(LORA_UART_9600);
   mqttClient.begin(SSID_NAME, SSID_PASSWORD, MQTT_HOST);
+  mqttClient.setPubTopic(MQTT_PUB_TOPIC);
+  mqttClient.setSubTopic(MQTT_SUB_TOPIC);
   delay(500);
 }
 
