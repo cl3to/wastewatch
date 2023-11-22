@@ -1,12 +1,8 @@
-// #include <Arduino.h>
-// #include <HardwareSerial.h>
+#include <Arduino.h>
+
 #include "lora.h"
-#include <WiFi.h>
 #include "mqtt.h"
 #include "utils.h"
-
-// #define RXD2 16
-// #define TXD2 17
 
 #ifndef SSID_NAME
 #define SSID_NAME "WasteWatch"
@@ -15,38 +11,29 @@
 #define SSID_PASSWORD "wastewatch"
 #endif
 
-// HardwareSerial LoRaSerial(2);
-
-
-void readMessage(char *buffer, int n) {
-  int i = 0;
-  while (LoRaSerial.available() && i < n)
-  {
-    buffer[i++] = LoRaSerial.read();
-  }
-  buffer[i] = '\0';
-}
+#define DEBUG_BAUD_RATE 115200
 
 char receiveBuffer[256];
 
-void setup() {
-  // Serial config
-  Serial.begin(115200);
-  LoRaSerial.begin(9600, SERIAL_8N1, RXD2, TXD2);
-  delay(500);
+LoRaUART lora;
+MQTTClient mqttClient(KONKER_USER, KONKER_PASSWORD);
 
-  // WiFi config
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(SSID_NAME, SSID_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-  }
-  Serial.println(WiFi.localIP());
+
+void setup() {
+  // Setup clients
+  Serial.begin(DEBUG_BAUD_RATE);
+  lora.begin(LORA_UART_9600);
+  mqttClient.begin(SSID_NAME, SSID_PASSWORD, MQTT_HOST);
+  delay(500);
 }
 
 void loop() {
-  readMessage(receiveBuffer, 256);
+
+  if (!mqttClient.connected()) {
+    mqttClient.reconnect();
+  }
+
+  lora.readMessage(receiveBuffer, 128);
   Serial.println(receiveBuffer);
   delay(3000);
 }
