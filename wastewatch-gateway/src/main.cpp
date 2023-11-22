@@ -1,9 +1,12 @@
-#include <Arduino.h>
-#include <HardwareSerial.h>
+// #include <Arduino.h>
+// #include <HardwareSerial.h>
+#include "lora.h"
 #include <WiFi.h>
+#include "mqtt.h"
+#include "utils.h"
 
-#define RXD2 16
-#define TXD2 17
+// #define RXD2 16
+// #define TXD2 17
 
 #ifndef SSID_NAME
 #define SSID_NAME "WasteWatch"
@@ -12,7 +15,7 @@
 #define SSID_PASSWORD "wastewatch"
 #endif
 
-HardwareSerial LoRaSerial(2);
+// HardwareSerial LoRaSerial(2);
 
 
 void readMessage(char *buffer, int n) {
