@@ -56,7 +56,7 @@ class Scale {
         int index = -1;       
         int samples = 0;
         int _restartCounter = 0;
-        char restaurant;
+        char restaurant[3];
 
         DataSender* _device = NULL;
 

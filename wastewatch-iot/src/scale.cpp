@@ -30,7 +30,7 @@ Scale::Scale(int _rx, int _tx) : Scale()
     this->index = 0;
     this->rx = _rx;
     this->tx = _tx;
-    this->restaurant = 'U';
+    strcpy(this->restaurant, "RU");
 }
 
 Scale::~Scale()
