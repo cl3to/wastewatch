@@ -116,7 +116,6 @@ void Scale::calculateMeasures(Measurement *m)
     {
         do
         {
-            // variation = variation + this->measurements[ix2]->weight_net - this->measurements[ix1]->weight_net;
             mean = mean + this->measurements[ix2]->weight();
             ix1 = ix2;
             ix2 = this->getNext(ix2);
@@ -133,7 +132,7 @@ void Scale::calculateMeasures(Measurement *m)
         // then flat as a new plate
 
         // condition to update (current weight is less than median weight)
-        if (m->weight() < (mean * .9) && m->weight() > (mean * 1.1))
+        if (m->weight() > 0)
         {
             logger->debug("Valid weight!");
             m->update = 1;
