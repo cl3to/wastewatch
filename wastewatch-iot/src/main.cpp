@@ -79,5 +79,6 @@ void loop()
     if (scale.shouldReboot())
     {
         logger->debug(">>>>>>>>>>> restarting after too much time idle ... ");
+        ESP.restart();
     }
 }

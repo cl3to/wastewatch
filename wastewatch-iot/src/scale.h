@@ -56,7 +56,8 @@ class Scale {
         int index = -1;       
         int samples = 0;
         int _restartCounter = 0;
-        // TODO: add restaurant flag
+        char restaurant[3];
+
         DataSender* _device = NULL;
 
         SoftwareSerial* serial_conn = NULL; // (D7,D8,true,256); // RX, TX, inverse, buffersize 
