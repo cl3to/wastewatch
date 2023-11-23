@@ -105,7 +105,7 @@ void Measurement::dump() {
 }
 
 void Measurement::payload(char* aux, int size, char* restaurant) {
-    snprintf(aux, size, "{\"R\": %s, \"P\": %.2f}",
+    snprintf(aux, size, "{\"R\": \"%s\", \"P\": %.2f}",
         restaurant, this->weight_net);
     aux[size-1] = '\0';
 }
