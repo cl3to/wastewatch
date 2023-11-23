@@ -2,7 +2,8 @@
 #include "lora.h"
 
 void LoRaUART::begin(int baudRate) {
-    _serial->begin(baudRate, SERIAL_8N1, RXD2, TXD2);
+    _serial = new SoftwareSerial(RXD2, TXD2);
+    _serial->begin(baudRate);
 }
 
 void LoRaUART::readMessage(char *buffer, uint8_t n) {

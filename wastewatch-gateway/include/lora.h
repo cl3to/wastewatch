@@ -1,15 +1,15 @@
 #ifndef LORA_H
 #define LORA_H
 
-#define RXD2 16
-#define TXD2 17
+#define RXD2 26
+#define TXD2 25
 
 #define LORA_UART_9600 9600
 
 #include <Arduino.h>
-#include <HardwareSerial.h>
+#include <SoftwareSerial.h>
 
-static HardwareSerial LoRaSerial(2);
+// SoftwareSerial LoRaSerial(26, 25);
 
 class LoRaUART {
     public:
@@ -18,7 +18,7 @@ class LoRaUART {
         void sendMessage(char *message);
     private:
         char _buffer[256];
-        HardwareSerial* _serial = &LoRaSerial;
+        SoftwareSerial *_serial;
 };
 
 #endif

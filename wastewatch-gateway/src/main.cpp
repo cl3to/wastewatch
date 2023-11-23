@@ -9,6 +9,7 @@
 #define DEBUG_BAUD_RATE 115200
 
 char receiveBuffer[256];
+char message[256];
 
 LoRaUART lora;
 MQTTClient mqttClient(KONKER_USER, KONKER_PASSWORD);
@@ -31,6 +32,17 @@ void loop() {
   }
 
   lora.readMessage(receiveBuffer, 128);
-  Serial.println(receiveBuffer);
+
+  if (strlen(receiveBuffer) > 0) {
+    char restaurant[3];
+    float value = extract_data(receiveBuffer, restaurant);
+    Serial.println(restaurant);
+    Serial.println(value);
+    jsonMQTTmsgDATA("WastewatchTest", restaurant, value, message, (uint8_t) 128);
+    Serial.println(message);
+    mqttClient.publish(message);
+    mqttClient.loop();
+  }
+
   delay(3000);
 }

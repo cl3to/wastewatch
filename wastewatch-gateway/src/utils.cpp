@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <cstring>
 #include "utils.h"
 
 void init_wifi(const char* ssid, const char* pwd) {
@@ -14,12 +15,19 @@ void init_wifi(const char* ssid, const char* pwd) {
 }
 
 
-void jsonMQTTmsgDATA(const char *device_id, const char *metric, float value, char* output, uint8_t size) {
+float extract_data(char* buffer, char* restaurant) {
+  float value;
+  sscanf(buffer, FORMAT, restaurant, &value);
+  return value;
+}
+
+
+void jsonMQTTmsgDATA(const char *device_id, const char *restaurant, float value, char* output, uint8_t size) {
 	const int capacity = JSON_OBJECT_SIZE(3);
 	StaticJsonDocument<capacity> jsonMSG;
 	jsonMSG["deviceId"] = device_id;
-	jsonMSG["metric"] = metric;
-	jsonMSG["value"] = value;
+	jsonMSG["R"] = restaurant;
+	jsonMSG["P"] = value;
 	serializeJson(jsonMSG, output, size);
 }
 

@@ -31,6 +31,10 @@ class MQTTClient {
             return _client.connected();
         }
 
+        void loop(){
+            _client.loop();
+        }
+
         bool begin(const char* ssid, const char* pwd, const char* host);
         void reconnect();
     private:
