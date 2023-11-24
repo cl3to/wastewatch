@@ -41,7 +41,7 @@ export const averageByDay = (data: WasteData[]): AverageWeightPerDay[] => {
       );
       averageWeightPerDay.push({
         day: weekDays[day],
-        weight: Number((totalWeight / dataPerDay[day].length).toFixed(2)),
+        Desperdicio: Number((totalWeight / dataPerDay[day].length).toFixed(2)),
       });
     }
   }

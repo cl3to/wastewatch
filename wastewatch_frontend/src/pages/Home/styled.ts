@@ -2,19 +2,21 @@ import styled from "styled-components";
 import * as colors from "../../styles/colors";
 
 export const HeaderContainer = styled.div`
-  padding-top: 20px;
+  width: 100%;
   height: 128px;
-  text-align: center;
   line-height: 45px;
-
-  h1,
-  h2 {
+  
+  h1 {
+    padding-top: 50px;
+    text-align: center;
     font-size: 3em;
     font-weight: bolder;
-    color: ${colors.myPrimaryColor};
+    color: ${colors.primaryColor};
   }
-  h2 {
-    font-size: 2em;
+
+  a{
+    margin-left: 20px;
+    padding-top: 20px;
   }
 `;
 

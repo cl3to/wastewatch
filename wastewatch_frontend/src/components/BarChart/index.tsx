@@ -1,4 +1,4 @@
-import { LabelFormatter, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import { Card, Empty } from "antd";
 import { AverageWeightPerDay } from "../../types/common_types";
 
@@ -29,13 +29,13 @@ const BarChart: React.FC<BarChartProps> = ({ chartData }) => {
         ticks: {
           text: {
             fontSize: 20,
+            fill: "#696773"
           },
         },
-      },
-      legends: {
-        title: {
-          text: {
-            fontSize: 55,
+        legend: {
+            text: {
+              fontSize: 24,
+              fill: "#272727"
           },
         },
       },
@@ -45,30 +45,28 @@ const BarChart: React.FC<BarChartProps> = ({ chartData }) => {
       <div style={{ height: "500px" }}>
         <ResponsiveBar
           data={data}
-          keys={["weight"]}
+          keys={["Desperdicio"]}
           indexBy="day"
-          borderWidth={1.5}
+          borderWidth={0.5}
           borderColor={"#000"}
-          margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+          margin={{ top: 20, right: 40, bottom: 60, left: 80 }}
           padding={0.3}
-          valueScale={{ type: "linear" }}
-          colors={colors.mySecondaryColor}
+          colors={colors.secondaryColor}
           animate={true}
           theme={theme}
-          enableLabel
+          enableLabel={false}
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
             legend: "Desperdício (em kg)",
             legendPosition: "middle",
-            legendOffset: -50,
+            legendOffset: -70,
           }}
           axisBottom={{
             legend: "Dias da Semana",
             legendPosition: "middle",
-            // tickRotation: 42,
-            legendOffset: 45,
+            legendOffset: 50,
           }}
         />
       </div>

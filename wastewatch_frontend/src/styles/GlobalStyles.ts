@@ -11,7 +11,7 @@ export default createGlobalStyle`
 
   body {
     font-family: sans-serif;
-    background: ${colors.myBackgroundColor};
+    background: ${colors.backgroundColor};
   }
 
   html, body, #root {

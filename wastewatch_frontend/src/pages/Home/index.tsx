@@ -30,10 +30,11 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
     lunch: "Almoço",
     dinner: "Jantar",
   }[meal];
-  const subTitle =
+  const title =
     !!meal && meal !== "all"
       ? `${restaurantName} - ${mealName}`
       : `${restaurantName}`;
+  const wastewatchLogo = require("../../assets/images/wastewatch_logo.png");
 
   useEffect(() => {
     const getWasteData = async () => {
@@ -170,8 +171,15 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
   return (
     <SpacedDiv>
       <HeaderContainer>
-        <h1> WasteWatch </h1>
-        <h2>{subTitle}</h2>
+        <a
+          href="/"
+          target="_blank"
+          rel="noreferrer"
+          style={{ position: "absolute" }}
+        >
+          <img src={wastewatchLogo} alt="Logo WasteWatch" />
+        </a>
+        <h1>{title}</h1>
       </HeaderContainer>
       <ContentContainer>
         <Row gutter={[32, 32]}>
@@ -183,7 +191,7 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
               <StatsCard text={"Desperdiçado Hoje"} value={142.2} />
               <StatsCard
                 text={"Comparação com a média do mês"}
-                value={-1.55}
+                value={1.55}
                 type="percentage"
               />
               <StatsCard
