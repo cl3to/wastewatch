@@ -4,15 +4,18 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <WiFi.h>
-
+#include "logging.h"
 #include "utils.h"
-
 
 class MQTTClient {
     public:
         MQTTClient(const char* user, const char* pwd){
             _user = user;
             _pwd = pwd;
+        }
+
+        void setLogger(Logger* logger){
+            _logger = logger;
         }
 
         void setPubTopic(const char* pub){
@@ -44,6 +47,7 @@ class MQTTClient {
         const char* _pwd;
         char* _pub;
         char* _sub;
+        Logger* _logger;
 };
 
 #endif

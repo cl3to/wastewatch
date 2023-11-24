@@ -5,7 +5,7 @@ bool MQTTClient::begin(const char* ssid, const char* pwd, const char* host) {
   _wifiClient = WiFiClient();
   _client = PubSubClient(_wifiClient);
 
-  init_wifi(ssid, pwd);
+  init_wifi(ssid, pwd, _logger);
 
   _client.setServer(host, 1883);
   _client.setCallback(mqtt_callback);
@@ -16,17 +16,15 @@ bool MQTTClient::begin(const char* ssid, const char* pwd, const char* host) {
 void MQTTClient::reconnect() {
   // Loop until we're reconnected
   while (!_client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    _logger->debug("Attempting MQTT connection...");
     
     // Tring to connect
     if (_client.connect(_user, _user, _pwd)) {
-      Serial.println("connected");
+      _logger->debug("connected");
       // Subscribe to the topic
       _client.subscribe(_sub);
     } else {
-      Serial.print("Failed! Code rc=");
-      Serial.print(_client.state());
-      Serial.println(" Try again in 5 seconds");
+      _logger->debug("Failed! Code rc=%d Try again in 5 seconds", _client.state());
       // Wait 5 seconds before retrying
       delay(5000);
     }
