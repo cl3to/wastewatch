@@ -14,20 +14,20 @@ bool MQTTClient::begin(const char* ssid, const char* pwd, const char* host) {
 }
 
 void MQTTClient::reconnect() {
-  // Entra no Loop ate estar conectado
+  // Loop until we're reconnected
   while (!_client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    // Usando um ID unico (Nota: IDs iguais causam desconexao no Mosquito)
-    // Tentando conectar
+    
+    // Tring to connect
     if (_client.connect(_user, _user, _pwd)) {
       Serial.println("connected");
-      // Subscrevendo no topico esperado
+      // Subscribe to the topic
       _client.subscribe(_sub);
     } else {
-      Serial.print("Falhou! Codigo rc=");
+      Serial.print("Failed! Code rc=");
       Serial.print(_client.state());
-      Serial.println(" Tentando novamente em 5 segundos");
-      // Esperando 5 segundos para tentar novamente
+      Serial.println(" Try again in 5 seconds");
+      // Wait 5 seconds before retrying
       delay(5000);
     }
   }

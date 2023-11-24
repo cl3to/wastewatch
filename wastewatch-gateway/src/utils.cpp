@@ -1,34 +1,19 @@
 #include <Arduino.h>
-#include <WiFi.h>
 #include <cstring>
+#include <WiFi.h>
 #include "utils.h"
 
 void init_wifi(const char* ssid, const char* pwd) {
   // WiFi config
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, pwd);
+  Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
+    delay(500);
+    Serial.print(".");
   }
+  Serial.print("\nConnected to WiFi with IP: ");
   Serial.println(WiFi.localIP());
-}
-
-
-float extract_data(char* buffer, char* restaurant) {
-  float value;
-  sscanf(buffer, FORMAT, restaurant, &value);
-  return value;
-}
-
-
-void jsonMQTTmsgDATA(const char *device_id, const char *restaurant, float value, char* output, uint8_t size) {
-	const int capacity = JSON_OBJECT_SIZE(3);
-	StaticJsonDocument<capacity> jsonMSG;
-	jsonMSG["deviceId"] = device_id;
-	jsonMSG["R"] = restaurant;
-	jsonMSG["P"] = value;
-	serializeJson(jsonMSG, output, size);
 }
 
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {

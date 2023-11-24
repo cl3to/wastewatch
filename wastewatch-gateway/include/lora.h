@@ -9,15 +9,12 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-// SoftwareSerial LoRaSerial(26, 25);
-
 class LoRaUART {
     public:
         void begin(int baudRate = LORA_UART_9600);
         void readMessage(char *buffer, uint8_t n);
         void sendMessage(char *message);
     private:
-        char _buffer[256];
         SoftwareSerial *_serial;
 };
 

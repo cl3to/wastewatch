@@ -10,17 +10,17 @@
 
 class MQTTClient {
     public:
-        MQTTClient(char* user, char* pwd){
+        MQTTClient(const char* user, const char* pwd){
             _user = user;
             _pwd = pwd;
         }
 
-        void setPubTopic(char* pub){
-            _pub = pub;
+        void setPubTopic(const char* pub){
+            _pub = (char *) pub;
         }
 
-        void setSubTopic(char* sub){
-            _sub = sub;
+        void setSubTopic(const char* sub){
+            _sub = (char *) sub;
         }
 
         void publish(char* msg){
@@ -40,8 +40,8 @@ class MQTTClient {
     private:
         WiFiClient _wifiClient;
         PubSubClient _client;
-        char* _user;
-        char* _pwd;
+        const char* _user;
+        const char* _pwd;
         char* _pub;
         char* _sub;
 };
