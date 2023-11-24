@@ -7,5 +7,5 @@ export interface WasteData {
 
 export interface AverageWeightPerDay {
   day: string;
-  weight: number;
+  Desperdicio: number;
 }

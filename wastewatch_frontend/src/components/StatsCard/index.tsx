@@ -1,6 +1,7 @@
 import { Card, Statistic, ConfigProvider } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { CardContainer } from "./styled";
+import * as colors from "../../styles/colors"
 
 interface StatsContainerProps {
   text: string;
@@ -16,8 +17,8 @@ export default function StatsContainer({
   const makeStatsCard = (value: number, text: string) => {
     const { color, arrowIcon } =
       value > 0
-        ? { color: "#cf1322", arrowIcon: <ArrowUpOutlined /> }
-        : { color: "#3f8600", arrowIcon: <ArrowDownOutlined /> };
+        ? { color: colors.dangerColor, arrowIcon: <ArrowUpOutlined /> }
+        : { color: colors.successColor, arrowIcon: <ArrowDownOutlined /> };
 
     return (
       <CardContainer>
@@ -34,13 +35,13 @@ export default function StatsContainer({
           >
             <Statistic
               title={text}
-              value={value}
+              value={Math.abs(value)}
               precision={2}
               prefix={type === "weight" ? "" : arrowIcon}
               decimalSeparator={","}
               groupSeparator={"."}
               suffix={type === "weight" ? "Kg" : "%"}
-              valueStyle={{ color }}
+              valueStyle={{color: type === "weight" ? colors.tertiaryColor : color} }
             />
           </ConfigProvider>
         </Card>
