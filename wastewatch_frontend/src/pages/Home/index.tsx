@@ -6,7 +6,10 @@ import BarChart from "../../components/BarChart";
 import StatsCard from "../../components/StatsCard";
 import ImageLink from "../../components/ImageLink";
 import { AverageWeightPerDay, WasteData } from "../../types/common_types";
-import { averageByDay } from "../../utils/aggregators";
+import {
+  averageByDay,
+  getTotalWeightToInterval,
+} from "../../utils/aggregators";
 import { HeaderContainer, SpacedDiv, ContentContainer, Footer } from "./styled";
 import { getDevices, getDeviceData, getAccessToken } from "../../api/konkerApi";
 
@@ -36,6 +39,13 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
       : `${restaurantName}`;
   const wastewatchLogo = require("../../assets/images/wastewatch_logo.png");
 
+  const todayDate = new Date();
+  const todayStart = new Date(todayDate);
+  todayStart.setHours(0, 0, 0, 0);
+
+  const todayEnd = new Date(todayDate);
+  todayEnd.setHours(23, 59, 59, 999);
+
   useEffect(() => {
     const getWasteData = async () => {
       try {
@@ -56,109 +66,290 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
     // TODO: Remove mock data and use konker date to timestamp
     setData([
       {
-        restaurant: "ru",
-        weight: 145.72,
-        date: new Date("2023-11-19T07:45:00Z"),
+        timestamp: new Date("2023-11-19T12:30:45.567Z"),
+        ingestedTimestamp: new Date("2023-11-19T12:30:45.567Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 398.8996144639814,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 145.72,
-        date: new Date("2016-07-30T07:45:00Z"),
+        timestamp: new Date("2023-11-20T08:15:30.987Z"),
+        ingestedTimestamp: new Date("2023-11-20T08:15:30.987Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 457.35233994279645,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 203.45,
-        date: new Date("2016-08-03T07:45:00Z"),
+        timestamp: new Date("2023-11-21T14:40:10.123Z"),
+        ingestedTimestamp: new Date("2023-11-21T14:40:10.123Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 643.7118996192374,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 97.88,
-        date: new Date("2016-08-11T07:45:00Z"),
+        timestamp: new Date("2023-11-22T10:20:55.789Z"),
+        ingestedTimestamp: new Date("2023-11-22T10:20:55.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 351.50619276860306,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 112.33,
-        date: new Date("2016-08-17T07:45:00Z"),
+        timestamp: new Date("2023-11-23T16:55:40.234Z"),
+        ingestedTimestamp: new Date("2023-11-23T16:55:40.234Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 472.72519364609235,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 250.11,
-        date: new Date("2016-08-14T07:45:00Z"),
+        timestamp: new Date("2023-11-24T13:10:20.567Z"),
+        ingestedTimestamp: new Date("2023-11-24T13:10:20.567Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 382.3079994493633,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 175.64,
-        date: new Date("2016-08-30T07:45:00Z"),
+        timestamp: new Date("2023-11-25T09:45:05.901Z"),
+        ingestedTimestamp: new Date("2023-11-25T09:45:05.901Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 623.7576141625484,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 88.2,
-        date: new Date("2016-09-02T07:45:00Z"),
+        timestamp: new Date("2023-11-19T12:32:15.456Z"),
+        ingestedTimestamp: new Date("2023-11-19T12:32:15.456Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 366.67667596329466,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 185.76,
-        date: new Date("2016-09-10T07:45:00Z"),
+        timestamp: new Date("2023-11-20T08:17:40.789Z"),
+        ingestedTimestamp: new Date("2023-11-20T08:17:40.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 470.46175974979826,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 120.98,
-        date: new Date("2016-02-21T07:45:00Z"),
+        timestamp: new Date("2023-11-21T14:42:30.123Z"),
+        ingestedTimestamp: new Date("2023-11-21T14:42:30.123Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 593.4835952801852,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 271.05,
-        date: new Date("2016-09-22T07:45:00Z"),
+        timestamp: new Date("2023-11-22T10:23:55.789Z"),
+        ingestedTimestamp: new Date("2023-11-22T10:23:55.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 381.6729440009729,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 68.77,
-        date: new Date("2016-10-02T07:45:00Z"),
+        timestamp: new Date("2023-11-24T13:12:05.567Z"),
+        ingestedTimestamp: new Date("2023-11-24T13:12:05.567Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 557.7376575505111,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 156.42,
-        date: new Date("2016-10-19T07:45:00Z"),
+        timestamp: new Date("2023-11-25T09:47:40.901Z"),
+        ingestedTimestamp: new Date("2023-11-25T09:47:40.901Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 457.3134518626907,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 102.88,
-        date: new Date("2016-10-19T07:45:00Z"),
+        timestamp: new Date("2023-11-19T12:34:30.456Z"),
+        ingestedTimestamp: new Date("2023-11-19T12:34:30.456Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 493.522331580776,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 189.2,
-        date: new Date("2016-10-01T07:45:00Z"),
+        timestamp: new Date("2023-11-20T08:20:55.789Z"),
+        ingestedTimestamp: new Date("2023-11-20T08:20:55.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 622.5024423710984,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 220.75,
-        date: new Date("2016-11-14T07:45:00Z"),
+        timestamp: new Date("2023-11-21T14:45:20.123Z"),
+        ingestedTimestamp: new Date("2023-11-21T14:45:20.123Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 508.4251286546521,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 78.46,
-        date: new Date("2016-11-09T07:45:00Z"),
+        timestamp: new Date("2023-11-22T10:26:45.789Z"),
+        ingestedTimestamp: new Date("2023-11-22T10:26:45.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 477.28820005641694,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 135.6,
-        date: new Date("2016-11-16T07:45:00Z"),
+        timestamp: new Date("2023-11-23T17:00:10.234Z"),
+        ingestedTimestamp: new Date("2023-11-23T17:00:10.234Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 427.3081049031773,
+        },
       },
       {
-        restaurant: "rs",
-        weight: 198.33,
-        date: new Date("2016-11-23T07:45:00Z"),
+        timestamp: new Date("2023-11-24T13:14:35.567Z"),
+        ingestedTimestamp: new Date("2023-11-24T13:14:35.567Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 560.748950008573,
+        },
       },
       {
-        restaurant: "ru",
-        weight: 56.89,
-        date: new Date("2016-11-30T07:45:00Z"),
+        timestamp: new Date("2023-11-25T09:50:05.901Z"),
+        ingestedTimestamp: new Date("2023-11-25T09:50:05.901Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 531.4519820093537,
+        },
       },
       {
-        restaurant: "ra",
-        weight: 165.75,
-        date: new Date("2016-12-07T07:45:00Z"),
+        timestamp: new Date("2023-11-19T12:36:00.456Z"),
+        ingestedTimestamp: new Date("2023-11-19T12:36:00.456Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 507.1074658547466,
+        },
+      },
+      {
+        timestamp: new Date("2023-11-20T08:23:25.789Z"),
+        ingestedTimestamp: new Date("2023-11-20T08:23:25.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 636.6636392022565,
+        },
       },
     ]);
   }, []);
@@ -188,7 +379,10 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           </Col>
           <Col span={5}>
             <SpacedDiv>
-              <StatsCard text={"Desperdiçado Hoje"} value={142.2} />
+              <StatsCard
+                text={"Desperdiçado hoje"}
+                value={getTotalWeightToInterval(data, todayStart, todayEnd)}
+              />
               <StatsCard
                 text={"Comparação com a média do mês"}
                 value={1.55}
