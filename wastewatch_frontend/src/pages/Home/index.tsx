@@ -18,10 +18,13 @@ interface HomeProps {
   meal?: string;
 }
 
+const DAY = 24 * 60 * 60 * 1000;
+
 export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
   const [data, setData] = useState<WasteData[]>([]);
   const [wasteData, setWasteData] = useState<WasteData[]>([]);
   const [chartData, setChartData] = useState<AverageWeightPerDay[]>([]);
+  const [todayWaste, setTodayWaste] = useState(0);
 
   const restaurantName = {
     ra: "Restaurante Administrativo",
@@ -42,9 +45,9 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
   const todayDate = new Date();
   const todayStart = new Date(todayDate);
   todayStart.setHours(0, 0, 0, 0);
-
   const todayEnd = new Date(todayDate);
   todayEnd.setHours(23, 59, 59, 999);
+  const oneWeekAgo = new Date(todayStart.getTime() - 7 * DAY);
 
   useEffect(() => {
     const getWasteData = async () => {
@@ -351,12 +354,52 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           value: 636.6636392022565,
         },
       },
+      {
+        timestamp: new Date("2023-11-26T08:23:25.789Z"),
+        ingestedTimestamp: new Date("2023-11-26T08:23:25.789Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 436.392022565,
+        },
+      },
+      {
+        timestamp: new Date("2023-11-27T09:50:05.901Z"),
+        ingestedTimestamp: new Date("2023-11-27T09:50:05.901Z"),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 591.093537,
+        },
+      },
+      {
+        timestamp: new Date(),
+        ingestedTimestamp: new Date(),
+        incoming: {
+          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
+          channel: "rs",
+        },
+        payload: {
+          deviceId: "wastewatch-node",
+          metric: "Peso",
+          value: 442.51,
+        },
+      },
     ]);
   }, []);
   console.log("wasteData from konker: ", wasteData);
 
   useEffect(() => {
     setChartData(averageByDay(data));
+    setTodayWaste(getTotalWeightToInterval(data, todayStart, todayEnd))
   }, [data]);
 
   return (
@@ -379,18 +422,15 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           </Col>
           <Col span={5}>
             <SpacedDiv>
-              <StatsCard
-                text={"Desperdiçado hoje"}
-                value={getTotalWeightToInterval(data, todayStart, todayEnd)}
-              />
+              <StatsCard text={"Desperdiçado hoje"} value={todayWaste} />
               <StatsCard
                 text={"Comparação com a média do mês"}
-                value={1.55}
+                value={1.42}
                 type="percentage"
               />
               <StatsCard
                 text={"Total desperdiçado na semana"}
-                value={2815.32}
+                value={getTotalWeightToInterval(data, oneWeekAgo, todayEnd)}
               />
             </SpacedDiv>
           </Col>
