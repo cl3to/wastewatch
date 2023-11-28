@@ -26,6 +26,8 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
   const [chartData, setChartData] = useState<AverageWeightPerDay[]>([]);
   const [todayWaste, setTodayWaste] = useState(0);
 
+  const weekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+
   const restaurantName = {
     ra: "Restaurante Administrativo",
     rs: "Restaurante da Saturnino",
@@ -68,19 +70,6 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
 
     // TODO: Remove mock data and use konker date to timestamp
     setData([
-      {
-        timestamp: new Date("2023-11-19T12:30:45.567Z"),
-        ingestedTimestamp: new Date("2023-11-19T12:30:45.567Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 398.8996144639814,
-        },
-      },
       {
         timestamp: new Date("2023-11-20T08:15:30.987Z"),
         ingestedTimestamp: new Date("2023-11-20T08:15:30.987Z"),
@@ -147,8 +136,8 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
         },
       },
       {
-        timestamp: new Date("2023-11-25T09:45:05.901Z"),
-        ingestedTimestamp: new Date("2023-11-25T09:45:05.901Z"),
+        timestamp: new Date("2023-11-18T12:32:15.456Z"),
+        ingestedTimestamp: new Date("2023-11-18T12:32:15.456Z"),
         incoming: {
           deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
           channel: "rs",
@@ -156,7 +145,7 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
         payload: {
           deviceId: "wastewatch-node",
           metric: "Peso",
-          value: 623.7576141625484,
+          value: 0.0,
         },
       },
       {
@@ -169,7 +158,7 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
         payload: {
           deviceId: "wastewatch-node",
           metric: "Peso",
-          value: 366.67667596329466,
+          value: 0.0,
         },
       },
       {
@@ -222,32 +211,6 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           deviceId: "wastewatch-node",
           metric: "Peso",
           value: 557.7376575505111,
-        },
-      },
-      {
-        timestamp: new Date("2023-11-25T09:47:40.901Z"),
-        ingestedTimestamp: new Date("2023-11-25T09:47:40.901Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 457.3134518626907,
-        },
-      },
-      {
-        timestamp: new Date("2023-11-19T12:34:30.456Z"),
-        ingestedTimestamp: new Date("2023-11-19T12:34:30.456Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 493.522331580776,
         },
       },
       {
@@ -316,32 +279,6 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
         },
       },
       {
-        timestamp: new Date("2023-11-25T09:50:05.901Z"),
-        ingestedTimestamp: new Date("2023-11-25T09:50:05.901Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 531.4519820093537,
-        },
-      },
-      {
-        timestamp: new Date("2023-11-19T12:36:00.456Z"),
-        ingestedTimestamp: new Date("2023-11-19T12:36:00.456Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 507.1074658547466,
-        },
-      },
-      {
         timestamp: new Date("2023-11-20T08:23:25.789Z"),
         ingestedTimestamp: new Date("2023-11-20T08:23:25.789Z"),
         incoming: {
@@ -352,19 +289,6 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           deviceId: "wastewatch-node",
           metric: "Peso",
           value: 636.6636392022565,
-        },
-      },
-      {
-        timestamp: new Date("2023-11-26T08:23:25.789Z"),
-        ingestedTimestamp: new Date("2023-11-26T08:23:25.789Z"),
-        incoming: {
-          deviceGuid: "8cad129a-0273-4ae5-8dd0-609e49418466",
-          channel: "rs",
-        },
-        payload: {
-          deviceId: "wastewatch-node",
-          metric: "Peso",
-          value: 436.392022565,
         },
       },
       {
@@ -422,7 +346,7 @@ export default function Home({ restaurant = "rs", meal = "all" }: HomeProps) {
           </Col>
           <Col span={5}>
             <SpacedDiv>
-              <StatsCard text={"Desperdiçado hoje"} value={todayWaste} />
+              <StatsCard text={`Desperdiçado hoje (${weekDays[todayDate.getDay()]})`} value={todayWaste} />
               <StatsCard
                 text={"Comparação com a média do mês"}
                 value={1.42}
